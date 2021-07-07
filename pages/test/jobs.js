@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import Card from '../../components/Card'
+import CardList from '../../components/CardList'
 import { Box, Grid, Heading, Input, Divider, Switch, VStack, HStack, Text } from "@chakra-ui/react"
 
 function Jobs({ data }) {
     const [filtredJobs, setFiltredJobs] = useState(data.jobs.slice(0, 12))
     const [postDateFilter, setPostDateFilter] = useState(false)
     const [searchFiled, setSearchFiled] = useState('')
-    const imageUrl = ["/bxl-amazon.svg", "/bxl-slack.svg", "/bxl-discord.svg", "/bxl-twitch.svg", "/bxl-apple.svg", "/bxl-google.svg", "/bxl-facebook.svg", "/bxl-spotify.svg", "/bxl-microsoft.svg", "/bxl-dropbox.svg", "/bxl-visa.svg", "/bxl-gitlab.svg"]
+
     const onInputChange = (event) => {
         setSearchFiled(event.target.value)
     }
 
     const onSwitchChange = () => {
         setPostDateFilter(!postDateFilter)
-
     }
 
     const filterJobsFunction = () => {
@@ -32,7 +31,6 @@ function Jobs({ data }) {
     return (
         <Box bg="#f6f8fc" h="100%" p="20px" fontFamily="'Lato', sans-serif" >
 
-
             <VStack>
                 <Heading as="h3" size="lg">
                     Job Board
@@ -44,21 +42,15 @@ function Jobs({ data }) {
                 </HStack>
             </VStack>
 
-
             <Divider m="20px 0px" />
 
             <Grid gridGap="40px" gridTemplateColumns="repeat(auto-fill, minmax(350px, 1fr))" gridTemplateRows="1fr">
-                {
-                    data && data.jobs && filtredJobs.map((job, index) => (
-                        <Card image={imageUrl[index]} jobTitle={job.jobTitle} companyName={job.companyName} shortDesc={job.shortDesc} />
-                    ))
-                }
+                <CardList data={data} filtredJobs={filtredJobs} />
             </Grid>
         </Box >
     )
 }
 
-// This gets called on every request
 export async function getServerSideProps() {
     // Fetch data from external API
     const res = await fetch(`https://www.zippia.com/api/jobs/`, {
